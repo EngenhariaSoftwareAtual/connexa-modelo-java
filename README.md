@@ -1,6 +1,6 @@
 # Connexa — modelo de repositório (Java + React)
 
-Repositório-modelo para as equipes que escolheram **Java** no back-end do Connexa. A partir dele, cada equipe cria o seu `connexa-equipe-NN` com a infraestrutura pronta: arquitetura modular, banco de dados, testes, CI, ambiente no GitHub Codespaces e a conexão do agente de IA com o Azure Boards.
+Repositório-modelo para as equipes que escolheram **Java** no back-end do Connexa. A partir dele, cada equipe cria, na organização do GitHub da própria equipe, o seu `<repositorio-da-equipe>` — com nome escolhido pela equipe — e já recebe a infraestrutura pronta: arquitetura modular, banco de dados, testes, CI, ambiente no GitHub Codespaces e a conexão do agente de IA com o Azure Boards.
 
 > **O que este modelo não traz:** nenhuma funcionalidade do Connexa. Os módulos estão vazios e são preenchidos sprint a sprint, a partir das Tasks do Azure Boards. As duas fatias incluídas (situação do sistema e estudante simulado) são exemplos de estrutura e apoio ao desenvolvimento.
 
@@ -34,7 +34,7 @@ Repositório-modelo para as equipes que escolheram **Java** no back-end do Conne
 ## 1. Estrutura do repositório
 
 ```
-connexa-equipe-NN/
+<repositorio-da-equipe>/
 ├── AGENTS.md                      instruções para agentes de IA (Codex e outros)
 ├── .github/
 │   ├── copilot-instructions.md    cópia idêntica do AGENTS.md (GitHub Copilot)
@@ -109,7 +109,7 @@ cd frontend; npm install; npm run dev
 | Diagramas dos módulos | `./verificar backend` e depois abra `backend/target/spring-modulith-docs/` |
 | Apagar os dados e recomeçar o banco | `docker compose down -v && docker compose up -d db` |
 
-> **`./verificar` é o `<comando-de-verificacao>`** citado no roteiro da Sprint 1 e nas Tasks prontas para agente.
+> **`./verificar` é o `<comando-de-verificacao>`** citado no roteiro da Atividade de Sprint e nas Tasks prontas para agente.
 
 ---
 
@@ -220,7 +220,7 @@ Quando a autenticação real chegar, só a implementação interna de `identidad
 
 **Convenção de nomes:** uma classe por história e um método por cenário, com `@DisplayName("Cenário: <nome exato do cenário>")`. No front-end, `it('Cenário: <nome exato>')`.
 
-> **Nunca desative uma verificação** para o build passar. Teste ignorado, asserção removida ou regra de lint desligada transformam a evidência em mentira, e o roteiro da sprint trata isso como ausência de entrega.
+> **Nunca desative uma verificação** para o build passar. Teste ignorado, asserção removida ou regra de lint desligada transformam a evidência em mentira e invalidam o trabalho da Task.
 
 ---
 
@@ -233,18 +233,20 @@ O agente lê as Tasks do Azure Boards por MCP. As instruções que ele segue est
 | 1 | GitHub Copilot no VS Code | Remoto, com login da conta institucional | `.vscode/mcp.json` — conexões `ado-planejamento` (escrita) e `ado-leitura` (somente leitura) |
 | 2 | Codex no VS Code | Local, via `npx` (requer Node.js 20+) | `.codex/config.toml` |
 
-Os detalhes de cada caminho, os prompts de referência e o protocolo de falha estão no roteiro da Sprint 1.
+Os detalhes de cada caminho, os prompts de referência e o protocolo de falha estão no roteiro da Atividade de Sprint.
 
 ---
 
 ## 9. Configuração depois de criar o repositório da equipe
 
-1. **Nome da organização do Azure DevOps:** substitua `<organizacao-azure-devops>` em `.vscode/mcp.json` e `.codex/config.toml`.
+A Parte 1 do roteiro da Atividade de Sprint (Etapas 3 e 4) detalha estes passos. Os nomes entre `< >` são escolhidos pela equipe; só o projeto do Azure DevOps tem nome fixo: `Connexa`.
+
+1. **Nome da organização do Azure DevOps:** substitua `<organizacao-azure-devops>` em `.vscode/mcp.json` e `.codex/config.toml`. A organização deve ter sido criada com a conta institucional (Microsoft Entra ID).
 2. **Proteção do `main`** (**Settings › Rules › Rulesets** ou **Settings › Branches**):
    - exigir pull request antes do merge, com **1 aprovação**;
    - exigir os checks **Back-end (testes e fronteiras)**, **Front-end (lint, testes e build)** e **Instruções do agente sincronizadas** — eles aparecem na lista depois da primeira execução do CI;
    - bloquear *force push* e exclusão do branch.
-3. **Azure Boards ↔ GitHub:** conecte o projeto `Connexa` ao repositório (**Project Settings › Boards › GitHub connections**), para que `AB#<id>` em commits e pull requests crie o vínculo com o work item.
+3. **Azure Boards ↔ GitHub:** conecte o projeto `Connexa` a `<repositorio-da-equipe>`, em `<organizacao-github>` (**Project Settings › Boards › GitHub connections**), para que `AB#<id>` em commits e pull requests crie o vínculo com o work item.
 4. **ADR-001:** registre em `docs/adr/` a arquitetura e a stack adotadas, usando `docs/adr/modelo-adr.md`.
 
 ---
@@ -258,7 +260,7 @@ Os detalhes de cada caminho, os prompts de referência e o protocolo de falha es
 | Sem Spring Security na Sprint 1 | A autenticação está fora da sprint. Com o starter, todas as rotas ficariam bloqueadas por padrão |
 | `UsuarioAtual` como API do módulo `identidade` | Os outros módulos não dependem de como a autenticação será feita |
 | Dependências da sprint já incluídas (validação, JPA, Flyway, React Hook Form, Zod) | As Tasks proíbem o agente de incluir dependências; o que a equipe precisa já está disponível |
-| Sem testes de ponta a ponta no navegador (Playwright) | Fora do escopo da Sprint 1; o roteiro exige verificação manual dos cenários na interface |
+| Sem testes de ponta a ponta no navegador (Playwright) | Fora do escopo da Sprint 1; o roteiro da Atividade de Sprint exige verificação manual dos cenários na interface |
 | Versões fixas no `package.json` e no `pom.xml` | O build é reprodutível; atualizar é uma decisão registrada em ADR |
 
 ---
